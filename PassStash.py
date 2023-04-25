@@ -16,7 +16,7 @@ pass_stash_window.geometry("800x600")
 pass_stash_window.configure(bg="#708090")
 pass_stash_window.resizable(False, False)
 pass_stash_window.eval('tk::PlaceWindow . center')
-pass_stash_icon = tkinter.Image("photo", file="temp_icon.png")
+pass_stash_icon = tkinter.Image("photo", file="pass_stash_icon.png")
 pass_stash_window.iconphoto(True, pass_stash_icon)
 pass_stash_window.wm_iconphoto(True, pass_stash_icon)
 
@@ -143,17 +143,17 @@ enter_button = tkinter.Button(
     pass_stash_welcome_frame, text="Enter The Vault",
     bg="#FFFFFF", fg="#181818", font=("Quicksand", 30), command=change_frame_home)
 
-pass_stash_logo = Image.open("temp_icon.png")
-resize_logo = pass_stash_logo.resize((200, 200))
+pass_stash_logo = Image.open("pass_stash_logo.png")
+resize_logo = pass_stash_logo.resize((250, 250))
 new_pass_stash_logo = ImageTk.PhotoImage(resize_logo)
 logo_label = tkinter.Label(image=new_pass_stash_logo, bg="#708090")
 
 # Placing Pass-Stash Intro Related Widgets and Fields
 pass_stash_label.grid(row=0, column=0, sticky="news", pady=50)
 pass_stash_slogan.grid(row=1, column=0)
-enter_button.grid(row=3, column=0, pady=50)
+enter_button.grid(row=3, column=0, pady=35)
 pass_stash_welcome_frame.pack()
-logo_label.pack(pady=24)
+logo_label.pack()
 
 # ======================================================================================================================
 
