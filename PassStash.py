@@ -1,6 +1,9 @@
 # ====================================== Imports for front end and backend =============================================
 
 import tkinter
+import random
+import pyperclip
+import sqlite3
 from PIL import ImageTk, Image
 
 # ======================================================================================================================
@@ -78,6 +81,49 @@ def change_frame_search():
 def change_frame_generate():
     home_options_frame.pack_forget()
     generate_password_frame.pack(fill='both', expand=1)
+
+
+# ======================================================================================================================
+
+# ======================================== Functions for all Operations ================================================
+
+new_password = tkinter.StringVar()
+
+
+def add_new_credential():
+    conn = sqlite3.connect("pass_stash_vault.db")
+    c = conn.cursor()
+
+    c.execute("INSERT INTO user_credentials VALUES (:nickname, :username, :password)",
+              {
+                  'nickname': account_entry.get(),
+                  'username': username_entry.get(),
+                  'password': password_entry.get()
+              })
+
+    conn.commit()
+    conn.close()
+    account_entry.delete(first=0, last=100)
+    username_entry.delete(first=0, last=100)
+    password_entry.delete(first=0, last=100)
+    change_frame_home()
+
+
+def generate_new_password():
+    generate_password = ""
+    all_characters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
+                      't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
+                      'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '1', '2', '3', '4', '5',
+                      '6', '7', '8', '9', '0', '`', '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '_',
+                      '+', '=', '[', '{', ']', '}', ':', ';', '<', ',', '>', '.', '?', '/']
+    for x in range(1, 13):
+        generate_password = generate_password + random.choice(all_characters)
+    new_password.set(generate_password)
+
+
+def copy_new_password():
+    new_generated_password = new_password.get()
+    pyperclip.copy(new_generated_password)
 
 
 # ======================================================================================================================
@@ -194,7 +240,7 @@ username_entry = tkinter.Entry(add_entry_frame, bg="#181818", fg="#FFFFFF", font
 password_entry = tkinter.Entry(add_entry_frame, bg="#181818", fg="#FFFFFF", font=("Quicksand", 16))
 
 add_save_button = tkinter.Button(
-    add_entry_frame, text="Save Entry", bg="#FFFFFF", fg="#181818", font=("Quicksand", 30), command=change_frame_home)
+    add_entry_frame, text="Save Entry", bg="#FFFFFF", fg="#181818", font=("Quicksand", 30), command=add_new_credential)
 
 add_cancel_button = tkinter.Button(
     add_entry_frame, text="Cancel Entry", bg="#FFFFFF", fg="#181818", font=("Quicksand", 30), command=change_frame_home)
@@ -380,13 +426,16 @@ generate_password_label = tkinter.Label(
 new_password_label = tkinter.Label(
     generate_password_frame, text="New Password", bg="#708090", fg="#FFFFFF", font=("Quicksand", 36), pady=5)
 
-new_password_entry = tkinter.Entry(generate_password_frame, bg="#181818", fg="#FFFFFF", font=("Quicksand", 36))
+new_password_entry = tkinter.Entry(generate_password_frame, bg="#181818", fg="#FFFFFF",
+                                   font=("Quicksand", 36), textvariable=new_password, justify="center")
 
 generate_new_password_button = tkinter.Button(
-    generate_password_frame, text="Generate Password", bg="#FFFFFF", fg="#181818", font=("Quicksand", 22))
+    generate_password_frame, text="Generate Password",
+    bg="#FFFFFF", fg="#181818", font=("Quicksand", 22), command=generate_new_password)
 
 copy_new_password_button = tkinter.Button(
-    generate_password_frame, text="Copy New Password", bg="#FFFFFF", fg="#181818", font=("Quicksand", 22))
+    generate_password_frame, text="Copy New Password",
+    bg="#FFFFFF", fg="#181818", font=("Quicksand", 22), command=copy_new_password)
 
 generate_password_cancel_button = tkinter.Button(
     generate_password_frame, text="Close Password Generator",
