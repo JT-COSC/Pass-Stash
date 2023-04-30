@@ -51,10 +51,25 @@ def change_frame_home():
     logo_label.pack_forget()
     pass_stash_welcome_frame.pack_forget()
     add_entry_frame.pack_forget()
+    account_entry.delete(first=0, last=100)
+    username_entry.delete(first=0, last=100)
+    password_entry.delete(first=0, last=100)
     update_entry_frame.pack_forget()
+    update_username_verify_entry.delete(first=0, last=100)
+    update_account_verify_entry.delete(first=0, last=100)
+    verify_selected_entry.delete(first=0, last=100)
+    update_account_entry.delete(first=0, last=100)
+    update_username_entry.delete(first=0, last=100)
+    update_password_entry.delete(first=0, last=100)
     delete_entry_frame.pack_forget()
+    delete_account_entry.delete(first=0, last=100)
+    delete_username_entry.delete(first=0, last=100)
+    delete_selected_entry.delete(first=0, last=100)
     search_entry_frame.pack_forget()
+    search_result_text.delete("1.0", "end")
+    search_entry.delete(first=0, last=100)
     generate_password_frame.pack_forget()
+    new_password_entry.delete(first=0, last=100)
     home_options_frame.pack(fill='both', expand=1)
 
 
@@ -87,8 +102,6 @@ def change_frame_generate():
 
 # ======================================== Functions for all Operations ================================================
 
-new_password = tkinter.StringVar()
-
 
 def add_new_credential():
     conn = sqlite3.connect("pass_stash_vault.db")
@@ -107,6 +120,128 @@ def add_new_credential():
     username_entry.delete(first=0, last=100)
     password_entry.delete(first=0, last=100)
     change_frame_home()
+
+
+def verify_update_credential():
+    conn = sqlite3.connect("pass_stash_vault.db")
+    c = conn.cursor()
+
+    verify_update_nickname = update_account_verify_entry.get()
+    verify_update_username = update_username_verify_entry.get()
+
+    verify_credential_update = c.execute("SELECT * FROM user_credentials WHERE nickname=? AND username=?",
+                                         (verify_update_nickname, verify_update_username))
+    verified_update = verify_credential_update.fetchone()
+
+    verify_selected_entry.insert(tkinter.END, verified_update)
+
+    conn.commit()
+    conn.close()
+
+
+def update_credential():
+    conn = sqlite3.connect("pass_stash_vault.db")
+    c = conn.cursor()
+
+    c.execute("""UPDATE user_credentials
+        SET
+            nickname = :updated_nickname,
+            username = :updated_username,
+            password = :updated_password
+        WHERE
+            nickname= :old_nickname AND username = :old_username""",
+              {
+                  'updated_nickname': update_account_entry.get(),
+                  'updated_username': update_username_entry.get(),
+                  'updated_password': update_password_entry.get(),
+                  'old_nickname': update_account_verify_entry.get(),
+                  'old_username': update_username_verify_entry.get()
+              })
+
+    conn.commit()
+    conn.close()
+    update_username_verify_entry.delete(first=0, last=100)
+    update_account_verify_entry.delete(first=0, last=100)
+    verify_selected_entry.delete(first=0, last=100)
+    update_account_entry.delete(first=0, last=100)
+    update_username_entry.delete(first=0, last=100)
+    update_password_entry.delete(first=0, last=100)
+    change_frame_home()
+
+
+def verify_delete_credential():
+    conn = sqlite3.connect("pass_stash_vault.db")
+    c = conn.cursor()
+
+    verify_delete_nickname = delete_account_entry.get()
+    verify_delete_username = delete_username_entry.get()
+
+    verify_credential = c.execute(
+        "SELECT * FROM user_credentials WHERE nickname=? AND username=?",
+        (verify_delete_nickname, verify_delete_username))
+    verified_credential = verify_credential.fetchone()
+
+    delete_selected_entry.insert(tkinter.END, verified_credential)
+
+    conn.commit()
+    conn.close()
+
+
+def delete_credential():
+    conn = sqlite3.connect("pass_stash_vault.db")
+    c = conn.cursor()
+
+    delete_nickname = delete_account_entry.get()
+    delete_username = delete_username_entry.get()
+
+    c.execute("DELETE FROM user_credentials WHERE nickname=? AND username=?", (delete_nickname, delete_username))
+
+    delete_account_entry.delete(first=0, last=100)
+    delete_username_entry.delete(first=0, last=100)
+    delete_selected_entry.delete(first=0, last=100)
+    conn.commit()
+    conn.close()
+    change_frame_home()
+
+
+def search_credential():
+    conn = sqlite3.connect("pass_stash_vault.db")
+    c = conn.cursor()
+
+    search_result_text.delete("1.0", "end")
+
+    search_nickname = search_entry.get()
+
+    search_for_credential = c.execute("SELECT * FROM user_credentials WHERE nickname=?", (search_nickname,))
+    found_credentials = search_for_credential.fetchall()
+
+    for item in found_credentials:
+        search_result_text.insert(tkinter.END, item)
+        search_result_text.insert(tkinter.END, "\n")
+
+    conn.commit()
+    conn.close()
+
+
+def search_all_credentials():
+    conn = sqlite3.connect("pass_stash_vault.db")
+    c = conn.cursor()
+
+    search_result_text.delete("1.0", "end")
+
+    credentials = c.execute("SELECT * FROM user_credentials")
+
+    all_credentials = credentials.fetchall()
+
+    for item in all_credentials:
+        search_result_text.insert(tkinter.END, item)
+        search_result_text.insert(tkinter.END, "\n")
+
+    conn.commit()
+    conn.close()
+
+
+new_password = tkinter.StringVar()
 
 
 def generate_new_password():
@@ -235,9 +370,9 @@ username_label = tkinter.Label(
 password_label = tkinter.Label(
     add_entry_frame, text="Password", bg="#708090", fg="#FFFFFF", font=("Quicksand", 36), pady=5)
 
-account_entry = tkinter.Entry(add_entry_frame, bg="#181818", fg="#FFFFFF", font=("Quicksand", 16))
-username_entry = tkinter.Entry(add_entry_frame, bg="#181818", fg="#FFFFFF", font=("Quicksand", 16))
-password_entry = tkinter.Entry(add_entry_frame, bg="#181818", fg="#FFFFFF", font=("Quicksand", 16))
+account_entry = tkinter.Entry(add_entry_frame, bg="#181818", fg="#FFFFFF", font=("Quicksand", 16), justify="center")
+username_entry = tkinter.Entry(add_entry_frame, bg="#181818", fg="#FFFFFF", font=("Quicksand", 16), justify="center")
+password_entry = tkinter.Entry(add_entry_frame, bg="#181818", fg="#FFFFFF", font=("Quicksand", 16), justify="center")
 
 add_save_button = tkinter.Button(
     add_entry_frame, text="Save Entry", bg="#FFFFFF", fg="#181818", font=("Quicksand", 30), command=add_new_credential)
@@ -265,12 +400,16 @@ update_header_label = tkinter.Label(
     update_entry_frame, text="Enter Account Information",
     bg="#708090", fg="#FFFFFF", font=("Quicksand", 50, "bold"), pady=50)
 
-update_account_verify_entry = tkinter.Entry(update_entry_frame, bg="#181818", fg="#FFFFFF", font=("Quicksand", 16))
-update_username_verify_entry = tkinter.Entry(update_entry_frame, bg="#181818", fg="#FFFFFF", font=("Quicksand", 16))
-update_password_verify_entry = tkinter.Entry(update_entry_frame, bg="#181818", fg="#FFFFFF", font=("Quicksand", 16))
+update_account_verify_entry = tkinter.Entry(update_entry_frame,
+                                            bg="#181818", fg="#FFFFFF", font=("Quicksand", 16), justify="center")
+update_username_verify_entry = tkinter.Entry(update_entry_frame,
+                                             bg="#181818", fg="#FFFFFF", font=("Quicksand", 16), justify="center")
+update_password_verify_entry = tkinter.Entry(update_entry_frame,
+                                             bg="#181818", fg="#FFFFFF", font=("Quicksand", 16), justify="center")
 
 verify_selected_button = tkinter.Button(update_entry_frame, text="Verify Account",
-                                        bg="#FFFFFF", fg="#181818", font=("Quicksand", 30))
+                                        bg="#FFFFFF", fg="#181818", font=("Quicksand", 30),
+                                        command=verify_update_credential)
 
 update_account_verify_label = tkinter.Label(
     update_entry_frame, text="Nickname", bg="#708090", fg="#FFFFFF", font=("Quicksand", 36), pady=5)
@@ -284,7 +423,8 @@ update_password_verify_label = tkinter.Label(
 verify_selected_label = tkinter.Label(
     update_entry_frame, text="Selected Account", bg="#708090", fg="#FFFFFF", font=("Quicksand", 30), pady=5)
 
-verify_selected_entry = tkinter.Entry(update_entry_frame, bg="#181818", fg="#FFFFFF", font=("Quicksand", 24), width=43)
+verify_selected_entry = tkinter.Entry(update_entry_frame,
+                                      bg="#181818", fg="#FFFFFF", font=("Quicksand", 24), width=43, justify="center")
 
 update_account_label = tkinter.Label(
     update_entry_frame, text="Nickname", bg="#708090", fg="#FFFFFF", font=("Quicksand", 36), pady=5)
@@ -295,13 +435,16 @@ update_username_label = tkinter.Label(
 update_password_label = tkinter.Label(
     update_entry_frame, text="Password", bg="#708090", fg="#FFFFFF", font=("Quicksand", 36), pady=5)
 
-update_account_entry = tkinter.Entry(update_entry_frame, bg="#181818", fg="#FFFFFF", font=("Quicksand", 16))
-update_username_entry = tkinter.Entry(update_entry_frame, bg="#181818", fg="#FFFFFF", font=("Quicksand", 16))
-update_password_entry = tkinter.Entry(update_entry_frame, bg="#181818", fg="#FFFFFF", font=("Quicksand", 16))
+update_account_entry = tkinter.Entry(update_entry_frame,
+                                     bg="#181818", fg="#FFFFFF", font=("Quicksand", 16), justify="center")
+update_username_entry = tkinter.Entry(update_entry_frame,
+                                      bg="#181818", fg="#FFFFFF", font=("Quicksand", 16), justify="center")
+update_password_entry = tkinter.Entry(update_entry_frame,
+                                      bg="#181818", fg="#FFFFFF", font=("Quicksand", 16), justify="center")
 
 update_save_button = tkinter.Button(
     update_entry_frame, text="Update Entry",
-    bg="#FFFFFF", fg="#181818", font=("Quicksand", 30), command=change_frame_home)
+    bg="#FFFFFF", fg="#181818", font=("Quicksand", 30), command=update_credential)
 
 update_cancel_button = tkinter.Button(
     update_entry_frame, text="Cancel Update",
@@ -339,24 +482,28 @@ delete_header_label = tkinter.Label(
 delete_account_label = tkinter.Label(
     delete_entry_frame, text="Nickname", bg="#708090", fg="#FFFFFF", font=("Quicksand", 30), pady=5)
 
-delete_account_entry = tkinter.Entry(delete_entry_frame, bg="#181818", fg="#FFFFFF", font=("Quicksand", 24), width=19)
+delete_account_entry = tkinter.Entry(delete_entry_frame,
+                                     bg="#181818", fg="#FFFFFF", font=("Quicksand", 24), width=19, justify="center")
 
 delete_username_label = tkinter.Label(
     delete_entry_frame, text="Username", bg="#708090", fg="#FFFFFF", font=("Quicksand", 30), pady=5)
 
-delete_username_entry = tkinter.Entry(delete_entry_frame, bg="#181818", fg="#FFFFFF", font=("Quicksand", 24), width=19)
+delete_username_entry = tkinter.Entry(delete_entry_frame,
+                                      bg="#181818", fg="#FFFFFF", font=("Quicksand", 24), width=19, justify="center")
 
 delete_verify_button = tkinter.Button(
-    delete_entry_frame, text="Verify Account", bg="#FFFFFF", fg="#181818", font=("Quicksand", 24))
+    delete_entry_frame, text="Verify Account", bg="#FFFFFF", fg="#181818", font=("Quicksand", 24),
+    command=verify_delete_credential)
 
 delete_selected_label = tkinter.Label(
     delete_entry_frame, text="Selected Account", bg="#708090", fg="#FFFFFF", font=("Quicksand", 30), pady=5)
 
-delete_selected_entry = tkinter.Entry(delete_entry_frame, bg="#181818", fg="#FFFFFF", font=("Quicksand", 24), width=43)
+delete_selected_entry = tkinter.Entry(delete_entry_frame,
+                                      bg="#181818", fg="#FFFFFF", font=("Quicksand", 24), width=43, justify="center")
 
 delete_entry_button = tkinter.Button(
     delete_entry_frame, text="Delete Account",
-    bg="#FFFFFF", fg="#181818", font=("Quicksand", 30), command=change_frame_home)
+    bg="#FFFFFF", fg="#181818", font=("Quicksand", 30), command=delete_credential)
 
 delete_cancel_button = tkinter.Button(
     delete_entry_frame, text="Cancel Delete",
@@ -388,13 +535,15 @@ search_header_label = tkinter.Label(
 search_entry_label = tkinter.Label(
     search_entry_frame, text="Account Nickname", bg="#708090", fg="#FFFFFF", font=("Quicksand", 30), pady=5)
 
-search_entry = tkinter.Entry(search_entry_frame, bg="#181818", fg="#FFFFFF", font=("Quicksand", 30))
+search_entry = tkinter.Entry(search_entry_frame, bg="#181818", fg="#FFFFFF", font=("Quicksand", 30), justify="center")
 
 search_entry_button = tkinter.Button(
-    search_entry_frame, text="Search Account", bg="#FFFFFF", fg="#181818", font=("Quicksand", 18))
+    search_entry_frame, text="Search Account",
+    bg="#FFFFFF", fg="#181818", font=("Quicksand", 18), command=search_credential)
 
 search_entry_all_button = tkinter.Button(
-    search_entry_frame, text="Show Accounts", bg="#FFFFFF", fg="#181818", font=("Quicksand", 18))
+    search_entry_frame, text="Show Accounts",
+    bg="#FFFFFF", fg="#181818", font=("Quicksand", 18), command=search_all_credentials)
 
 search_result_text = tkinter.Text(
     search_entry_frame, height=10, width=65, bg="#181818", fg="#FFFFFF", font=("Quicksand", 18))
