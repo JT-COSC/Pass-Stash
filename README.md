@@ -1,7 +1,8 @@
 # Pass-Stash
 <h3 align="center">
-  <img src="https://raw.githubusercontent.com/JT-COSC/Pass-Stash/main/pass_stash_logo.png?token=GHSAT0AAAAAACBNX4BTLZHLYSAAYMPDWSYQZCPBB5A" width="500"/><br/>
+  <img src="https://user-images.githubusercontent.com/124105347/235404275-33eea06d-2b09-40b6-ad1a-6db40200b3a1.png" width="500"/><br/>
 </h3>
+
 <p align="center">
   <em>Password Peace of Mind All in One Place</em>
 </p>
