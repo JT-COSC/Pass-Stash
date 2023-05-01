@@ -1,4 +1,4 @@
-# Pass-Stash
+# Pass-Stash: Manager & Vault
 <h3 align="center">
   <img src="https://user-images.githubusercontent.com/124105347/235404275-33eea06d-2b09-40b6-ad1a-6db40200b3a1.png" width="500"/><br/>
 </h3>
