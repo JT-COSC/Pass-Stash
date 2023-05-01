@@ -7,7 +7,7 @@
   <em>Password Peace of Mind All in One Place</em>
 </p>
 <p align="left">
-   Pass-Stash is meant to be a lightweight and local hosted password manager and vault that is easy to use and provides its users with secure passwords with the push of a button. Additionally, users can create and manage entries for each account, allowing for a username, a password, and a nickname to be stored. All of these passwords are stored securely on the user's device, with the vault accessible through a user created Master Password. 
+   Pass-Stash is meant to be a lightweight and locally hosted password manager and vault that is easy to use and provides its users with secure passwords with the push of a button. Additionally, users can create and manage entries for each account, allowing for a username, a password, and a nickname to be stored. All of these passwords are stored securely on the user's device, with the vault accessible through a user created Master Password (Coming Soon). 
  
 <!-- TABLE OF CONTENTS -->
 <details>
@@ -29,7 +29,7 @@
 </details>
   
 ## Why Use Pass-Stash?
-  Pass-Stash is different from other password managers in that all of the data is stored locally as opposed to on a global server. This prevents your sensitive information from being compromised in the event of a major data breach. No matter if you have 3 passwords or 30, you can rest assured knowing that your data is safely stored on your device. Pass-Stash also allows you to generate strong passwords with the push of a button, ensuring that your accounts remain secure. 
+  Pass-Stash is different from most other password managers in that all of the data is stored locally as opposed to on a global server. This prevents your sensitive information from being compromised in the event of a major data breach. No matter if you have 3 passwords or 30, you can rest assured knowing that your data is safely stored on your device. Pass-Stash also allows you to generate strong passwords with the push of a button, ensuring that your accounts remain secure. 
   
 ## Functions
   ### Password Generation
