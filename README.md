@@ -49,5 +49,5 @@
   <img width="500" alt="Update_Cred" src="https://user-images.githubusercontent.com/124105347/235396309-b81d3332-81af-4064-8cf1-0c95ec858e0d.png">
 
   ### Deleting an Account
-  Deleting an account is much like the editing process in that you enter the nickname and username of the account you want to delete. Once you confirm that the entry is the right one, yjou can either delete the entry or cancel the deletion if you change your mind. <br/>
+  Deleting an account is much like the editing process in that you enter the nickname and username of the account you want to delete. Once you confirm that the entry is the right one, you can either delete the entry or cancel the deletion if you change your mind. <br/>
   <img width="500" alt="Delete_Cred" src="https://user-images.githubusercontent.com/124105347/235397340-1af4ada1-a7d5-4c1f-ba98-34f93c22138e.png">
