@@ -38,10 +38,11 @@
 ## Installation
 To install Pass-Stash you can download the executable file for your respective operating system. Additionally, you can run Pass-Stash using the source code from the PassStash.py document. You will know it is up and running once you are greeted with the start screen, shown here.
 <p align="center">
-  <img width="500" alt="Intro_Screen" src="https://user-images.githubusercontent.com/124105347/235578643-a995876f-85d7-4b25-8130-569e650fb5e8.png">
+  <img width="500" alt="Intro_Screen" src="https://user-images.githubusercontent.com/124105347/235718887-2e1323f4-0a88-47ae-82f7-1e85c4158dae.png">
 </p>  
 
 ## Functions
+
   ### Password Generation
   Using a random character generator, Pass-Stash will create a secure 12 character password which you can use for any accounts that you want to keep safe. You can then copy the password and store it in the database.<br/>
 <p align="center">
